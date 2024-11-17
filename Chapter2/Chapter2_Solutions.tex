@@ -1,0 +1,268 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{matlab-prettifier}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amscd, amssymb, amsmath,amsfonts,bm, mathrsfs}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{thmtools,thm-restate}
+\usepackage[shortlabels]{enumitem}
+
+\graphicspath{{assets/}}
+\pagenumbering{gobble}
+\setlength\parindent{0in}
+\headsep=0.25in
+\linespread{1.1}
+
+\newenvironment{proof}{\textit{Proof.}}{\hfill$\square$}
+
+\lhead{\lefthead}\chead{\centerhead}\rhead{\righthead}
+
+\newcommand{\lefthead}{Fourier Analysis}
+\newcommand{\centerhead}{}
+\newcommand{\righthead}{Chapter 2 Selected Exercises}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand*\Eval[3]{\left.#1\right\rvert_{#2}^{#3}}
+\newcommand{\bbn}{\mathbb{N}}
+\newcommand{\bbz}{\mathbb{Z}}
+\newcommand{\bbq}{\mathbb{Q}}
+\newcommand{\bbr}{\mathbb{R}}
+\newcommand{\bbc}{\mathbb{C}}
+\newcommand{\bbi}{\mathbb{I}}
+\newcommand{\bbp}{\mathbb{P}}
+\newcommand{\calr}{\mathcal{R}}
+\newcommand{\scrl}{\mathscr{l}}
+\DeclareMathOperator{\trace}{trace}
+\DeclareMathOperator{\dom}{dom}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\begin{document}
+\subsection*{Exercise 6}
+Let $f$ be the function defined on $[-\pi,\pi]$ by $f(\theta)=|\theta|$.
+\begin{enumerate}[(a)]
+    \item The graph of $f$ \begin{center}
+        \includegraphics[width=.75\textwidth]{assets/144-2-6.eps}
+    \end{center}
+    \item Calculate the Fourier coefficients of $f$, and show that
+    \begin{equation*}
+        \hat{f}(n)=\begin{cases}
+            \frac{\pi}{2}, &n=0 \\
+            \frac{-1+(-1)^n}{n^2\pi}, &n\ne0 \\
+        \end{cases}
+    \end{equation*}
+    \begin{enumerate}[(i)]
+        \item Let $n=0$. Then,
+        \begin{align*}
+            \hat{f}(0)&=\frac{1}{2\pi}\int_{-\pi}^{\pi}f(\theta)d\theta \\
+            &=\frac{1}{2\pi}\int_{0}^{\pi}\theta d\theta + \frac{1}{2\pi}\int_{-\pi}^{0}-\theta d\theta \\
+            &=\frac{1}{2\pi}\Eval{\frac{\theta^2}{2}}{0}{\pi}-\frac{1}{2\pi}\Eval{\frac{\theta^2}{2}}{-\pi}{0} \\
+            &=\frac{\pi}{4} + \frac{\pi}{4} \\
+            &=\frac{\pi}{2}
+        \end{align*}
+        \newpage
+        \item Let $n\ne0$. Then,
+        \begin{align*}
+            \hat{f}(n)&=\frac{1}{2\pi}\int_{-\pi}^{\pi}f(\theta)e^{-in\theta}d\theta \\
+            &=\frac{1}{2\pi}\int_{0}^{\pi}\theta e^{-in\theta} d\theta + \frac{1}{2\pi}\int_{-\pi}^{0}-\theta e^{-in\theta}d\theta \\
+            &\hspace{0.5em}\vdots\hspace{1em}\text{(Integration By Parts)} \\
+            &=\frac{1}{2\pi}\Big(\frac{-1+(-1)^n}{n^2} + \frac{-1+(-1)^n}{n^2}\Big) \\
+            &=\frac{-1+(-1)^n}{n^2\pi} 
+        \end{align*}
+    \end{enumerate}
+    \item What is the Fourier series of $f$ in terms of sines and cosines?
+    \begin{align*}
+        f(\theta)&\sim\sum_{n=-\infty}^{\infty}\hat{f}(n)e^{in\theta} \\
+        &\sim\frac{\pi}{2} + \sum_{n=-\infty}^{-1}\frac{-1 + (-1)^n}{n^2\pi}e^{in\theta} + \sum_{n=1}^{\infty}\frac{-1 + (-1)^n}{n^2\pi}e^{in\theta} \\
+        &\sim\frac{\pi}{2} + \frac{2}{\pi}\sum_{n=1}^{\infty}\frac{-1 + (-1)^n}{n^2}\cdot\frac{e^{in\theta} + e^{-in\theta}}{2} \\
+        &\sim\frac{\pi}{2} + \frac{2}{\pi}\sum_{n=1}^{\infty}\frac{-1 + (-1)^n}{n^2}\cos(n\theta) \\
+        &\sim\frac{\pi}{2} - \frac{4}{\pi}\sum_{n\text{ odd }\ge1}^{\infty}\frac{1}{n^2}\cos(n\theta) \\
+    \end{align*}
+    \item Taking $\theta=0$, prove that
+    \begin{equation*}
+        \sum_{n\text{ odd }\ge1}\frac{1}{n^2}=\frac{\pi^2}{8}\hspace{1em}\text{and}\hspace{1em}\sum_{n=1}^{\infty}\frac{1}{n^2}=\frac{\pi^2}{6}
+    \end{equation*}
+    \newpage
+    \begin{proof}
+        By \textbf{Corollary 2.3}, we have that
+        \begin{equation*}
+            f(\theta) = \sum_{n=-\infty}^{\infty}\hat{f}(n)e^{in\theta} \\
+        \end{equation*}
+        as $f$ is continous on the circle with its Fourier series absolutely convergent. Then
+        \begin{align*}
+            f(0)&=0\\
+            &=\frac{\pi}{2} - \frac{4}{\pi}\sum_{n\text{ odd }\ge1}^{\infty}\frac{1}{n^2}\cos(0) \\
+            &=\frac{\pi}{2} - \frac{4}{\pi}\sum_{n\text{ odd }\ge1}^{\infty}\frac{1}{n^2} \\
+        \end{align*}
+        implying
+        \begin{equation}
+            0=\frac{\pi}{2} - \frac{4}{\pi}\sum_{n\text{ odd }\ge1}^{\infty}\frac{1}{n^2}
+        \end{equation}
+        it is clear from ($1$) that
+        \begin{equation*}
+            \sum_{n\text{ odd }\ge1}\frac{1}{n^2}=\frac{\pi^2}{8}
+        \end{equation*}
+        Furthermore,
+        \begin{align*}
+            \sum_{n=1}^{\infty}\frac{1}{n^2} &= \sum_{n\text{ odd }\ge1}\frac{1}{n^2} + \sum_{n\text{ even }\ge2}\frac{1}{n^2} \\
+            &= \frac{\pi^2}{8} + \frac{1}{4}\sum_{n=1}^{\infty}\frac{1}{n^2} \\
+        \end{align*}
+        resulting in the following equality,
+        \begin{equation}
+            \sum_{n=1}^{\infty}\frac{1}{n^2}=\frac{\pi^2}{8} + \frac{1}{4}\sum_{n=1}^{\infty}\frac{1}{n^2}
+        \end{equation}
+        and it is clear from ($2$) that 
+        \begin{equation*}
+            \sum_{n=1}^{\infty}\frac{1}{n^2} = \frac{\pi^2}{6}
+        \end{equation*}
+    \end{proof}
+\end{enumerate}
+\newpage
+\setcounter{equation}{0}
+
+\subsection*{Exercise 10}
+Suppose $f$ is a periodic function of period $2\pi$ which belongs to the class $C^k$. Show that
+\begin{equation}
+    \hat{f}(n)=O\Bigg(\frac{1}{|n|^k}\Bigg)\hspace{1em}\text{as }|n|\to\infty.
+\end{equation}
+
+\vspace{2em}
+\begin{proof}
+    To formally show ($1$), we perform induction on $k$. Let $k=1$, and $n\ne0$. Then
+    \begin{equation*}
+        \hat{f'}(n)=in\hat{f}(n)
+    \end{equation*}
+    holds as a result of \textbf{Corollary 2.4}. Furthermore,
+    \begin{align*}
+        |\hat{f'}(n)|&\le\frac{1}{2\pi}\int_{0}^{2\pi}|f'(\theta)e^{-in\theta}|d\theta \\
+        &\le C_1\int_{0}^{2\pi}|f'(\theta)|d\theta \\
+        &= C
+    \end{align*}
+    for some $C\in\bbr$. So
+    \begin{equation*}
+        |\hat{f}(n)|\le\frac{C}{|n|}
+    \end{equation*}
+    and the base case holds. Now suppose the statement holds for $k\ge1$. Then, for $k+1$
+    \begin{align*}
+        |\hat{f}(n)|&\le\frac{|\hat{f'}(n)|}{|n|} \\
+        &\le\frac{1}{|n|}\cdot\frac{C}{|n|^k} \\
+        & = \frac{C}{|n|^{k+1}}
+    \end{align*}
+    holds from our induction hypothesis, and
+    \begin{equation*}
+        \hat{f}(n)=O\Bigg(\frac{1}{|n|^k}\Bigg)\hspace{1em}\text{as }|n|\to\infty.
+    \end{equation*}
+\end{proof}
+\newpage
+
+\subsection*{Exercise 11}
+Suppose that $\{f_k\}_{k=1}^\infty$ is a sequence of Riemann integrable functions on the interval $[0,1]$
+such that 
+\begin{equation*}
+    \int_{0}^{1}|f_k(x)-f(x)|dx\to0\hspace{1em}\text{as }k\to\infty.
+\end{equation*}
+Show that $\hat{f_k}(n)\to\hat{f}(n)$ uniformly in $n$ as $k\to\infty$.
+
+\vspace{2em}
+\begin{proof}
+    To show $\hat{f_k}(n)\to\hat{f}(n)$ converges uniformly in $n$ as $k\to\infty$, we first look at the following
+    \begin{align*}
+        |\hat{f_k}(n)-\hat{f}(n)|&=|\widehat{(f_k-f)}(n)| \\
+        &=\Big|\int_{0}^{1}[f_k(x)-f(x)]e^{-2\pi inx}dx\Big| \\
+        &\le\int_{0}^{1}|f_k(x)-f(x)|dx \\
+        &\to 0
+    \end{align*}
+    holds from our assumption, concluding $\hat{f_k}(n)\to\hat{f}(n)$ uniformly in $n$ as $k\to\infty$.
+\end{proof}
+\newpage
+
+\subsection*{Exercise 12}
+Prove that if a series of complex numbers $\sum c_n$ converges to $s$, then $\sum c_n$ is Cesàro summable to $s$.
+
+\vspace{2em}
+\begin{proof}
+    Define
+    \begin{equation*}
+        s_n=\sum_{k=0}^{n}c_k
+    \end{equation*}
+    and assume without loss of generality, $s_n\to0$ as $n\to\infty$.
+    Given $\epsilon >0$, $\exists N_0\in\bbn$ such that
+    \begin{equation*}
+        |s_n-s|=|s_n|<\epsilon, \hspace{1em}\forall n>N_0
+    \end{equation*}
+    then $\exists N>n$ such that
+    \begin{align*}
+        \sigma_n&=\frac{1}{N}\sum_{n=0}^{N-1}s_n \\
+        &\le\frac{1}{N}\Big|\sum_{n=0}^{N-1}s_n\Big| \\
+        &\le\frac{1}{N}\sum_{n=0}^{N-1}|s_n| \\
+        &<\frac{1}{N}\cdot N\epsilon \\
+        &=\epsilon
+    \end{align*}
+    So $\sum c_n$ is Cesàro summable to $s$.
+\end{proof}
+\newpage
+
+\subsection*{Exercise 15}
+Prove that Fejér kernel is given by
+\begin{equation*}
+    F_N(x)=\frac{1}{N}\frac{\sin^2(Nx/2)}{\sin^2(x/2)}
+\end{equation*}
+
+\vspace{2em}
+\begin{proof}
+    Let 
+    \begin{equation*}
+        NF_N(x)=D_0(x)+\cdots+D_{N-1}(x)
+    \end{equation*}
+    where $D_n(x)$ is the Dirichlet kernel. Therefore, if $\omega=e^{ix}$, we have
+    \begin{align*}
+        NF_N(x)&=\sum_{n=0}^{N-1}\frac{\omega^{-n}-\omega^{n+1}}{1-\omega} \\
+        &=\frac{1}{1-\omega}\Big(\sum_{n=0}^{N-1}\omega^{-n}-\sum_{n=0}^{N-1}\omega^{n+1}\Big) \\
+        &=\frac{1}{1-\omega}\Big(\frac{1-\omega^{-N}}{1-\omega^{-1}}-\omega\frac{1-\omega^N}{1-\omega}\Big) \\
+        &=\frac{1}{(1-\omega)^2}\omega(\omega^\frac{N}{2}-\omega^\frac{-N}{2})^2 \\
+        &=\frac{(\omega^\frac{N}{2}-\omega^\frac{-N}{2})^2}{(\omega^\frac{1}{2}-\omega^\frac{-1}{2})^2} \\
+        &=\frac{(e^\frac{iNx}{2}-e^\frac{-iNx}{2})^2}{(e^\frac{ix}{2}-e^\frac{-ix}{2})^2} \\
+        &=\frac{\sin^2(Nx/2)}{\sin^2(x/2)}
+    \end{align*}
+    It is clear from above that the Fejér kernel is given by
+    \begin{equation*}
+        F_N(x)=\frac{1}{N}\frac{\sin^2(Nx/2)}{\sin^2(x/2)}
+    \end{equation*}
+\end{proof}
+\newpage
+
+\subsection*{Exercise 17a}
+Prove that if $f$ has a jump discontinuity at $\theta$, then
+\begin{equation*}
+    \lim_{r\to1}A_r(f)(\theta)=\frac{f(\theta^+)-f(\theta^-)}{2},\hspace{1em}\text{ with }0\le\theta<1
+\end{equation*}
+
+\vspace{2em}
+\begin{proof}
+    We will begin this proof with investingating the Poisson kernel, given by
+    \begin{equation*}
+        P_r(\theta)=\sum_{n=-\infty}^{\infty}r^{|n|}e^{in\theta}=\frac{1-r^2}{1-2r\cos(\theta)+r^2}
+    \end{equation*}
+    It is should be noted that $P_r(\theta)$ is even. Furthermore, from \textbf{Lemma 5.5} we can conclude $P_r(\theta)$ is a good kernel.
+    This will be useful as
+    \begin{equation*}
+        \frac{1}{2\pi}\int_{-\pi}^{0}P_r(\theta)d\theta = \frac{1}{2\pi}\int_{0}^{\pi}P_r(\theta)d\theta=\frac{1}{2}
+    \end{equation*}
+    Additionally, with $A_r(f)(\theta)=(f*P_r)(\theta)$. Let $\epsilon>0$, $\exists\delta>0$ with
+    \begin{align}
+        |f(\theta-y)-f(\theta^-)|<\frac{\epsilon}{2},&\hspace{1em}-\pi\le\theta<\-\delta \\
+        |f(\theta-y)-f(\theta^+)|<\frac{\epsilon}{2},&\hspace{1em}\delta<\theta\le\pi
+    \end{align}
+    \begin{align*}
+        \Big|A_r(f)(\theta)- \frac{f(\theta^+)-f(\theta^-)}{2}\Big|&=\Big|\frac{1}{2\pi}\int_{-\pi}^{\pi}f(\theta-y)P_r(\theta)d\theta-\frac{f(\theta^+)-f(\theta^-)}{2}\Big| \\
+        &=
+    \end{align*}
+\end{proof}
+\end{document}

@@ -1,0 +1,411 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{matlab-prettifier}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amscd, amssymb, amsmath,amsfonts,bm, mathrsfs}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{thmtools,thm-restate}
+\usepackage[shortlabels]{enumitem}
+
+\graphicspath{{assets/}}
+\pagenumbering{gobble}
+\setlength\parindent{0in}
+\headsep=0.25in
+\linespread{1.1}
+
+\newenvironment{proof}{\textit{Proof.}}{\hfill$\square$}
+
+\lhead{\lefthead}\chead{\centerhead}\rhead{\righthead}
+
+\newcommand{\lefthead}{Fourier Analysis}
+\newcommand{\centerhead}{}
+\newcommand{\righthead}{Chapter 3 Selected Exercises}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand*\Eval[3]{\left.#1\right\rvert_{#2}^{#3}}
+\newcommand{\bbn}{\mathbb{N}}
+\newcommand{\bbz}{\mathbb{Z}}
+\newcommand{\bbq}{\mathbb{Q}}
+\newcommand{\bbr}{\mathbb{R}}
+\newcommand{\bbc}{\mathbb{C}}
+\newcommand{\bbi}{\mathbb{I}}
+\newcommand{\bbp}{\mathbb{P}}
+\newcommand{\calr}{\mathcal{R}}
+\newcommand{\scrl}{\mathscr{l}}
+\DeclareMathOperator{\trace}{trace}
+\DeclareMathOperator{\dom}{dom}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\begin{document}
+\subsection*{Exercise 5}
+Let
+\begin{equation*}
+    f(\theta)=\begin{cases}
+        0, &\theta=0\\
+        \log(\frac{1}{\theta}), &0<\theta\le2\pi\\
+    \end{cases}
+\end{equation*}
+and define a sequence of functions in $\mathcal{R}$ by
+\begin{equation*}
+    f_n(\theta)=\begin{cases}
+        0, &0\le\theta\le\frac{1}{n}\\
+        f(\theta), &\frac{1}{n}<\theta\le2\pi\\
+    \end{cases}
+\end{equation*}
+Prove that $\{f_n\}_{n=1}^\infty$ is a Cauchy sequence in $\calr$. However, $f$ does not belong in $\calr$.
+
+\vspace{2em}
+\begin{proof}
+    Let $m,n\in\bbn$ with $m\ge n$. Then
+    \begin{align*}
+        \norm{f_m - f_n}^2 &= \frac{1}{2\pi}\int_{0}^{2\pi}|f_m(\theta)-f_n(\theta)|^2d\theta \\
+        &= \frac{1}{2\pi}\int_{\frac{1}{m}}^{\frac{1}{n}}\log(\theta)^2d\theta \\
+        &= \frac{1}{2\pi}\Eval{(\theta\log(\theta)^2 -2\theta\log(\theta)+2\theta)}{\frac{1}{m}}{\frac{1}{n}} \\
+        &= \frac{1}{2\pi}\Eval{(\theta([\log(\theta) - 1]^2 + 1))}{\frac{1}{m}}{\frac{1}{n}} \\
+        &= \frac{1}{2\pi}\Big[\frac{1}{n}([\log(n) + 1]^2 + 1) - \frac{1}{m}([\log(m) + 1]^2 + 1)\Big] \\
+        &\to 0
+    \end{align*}
+    for sufficiently large $m,n$. So $\{f_n\}_{n=1}^\infty$ is a Cauchy sequence with $f_n\to f$ as $n\to\infty$. However, since $f$ is unbounded, so $f$ does not belong in $\calr$.
+\end{proof}
+\newpage
+\subsection*{Exercise 6}
+Consider the sequence $\{a_k\}_{k=-\infty}^\infty$ defined by 
+\begin{equation*}
+    a_k=\begin{cases}
+        \frac{1}{k}, &k\ge1 \\
+        0, &k\le0 \\
+    \end{cases}
+\end{equation*}
+Prove that $\{a_k\}\in \ell^2(\bbz)$, but that no Riemann integrable function has $k^{\text{th}}$ Fourier coefficient
+equal to $a_k$ for all $k$.
+
+\vspace{2em}
+\begin{proof}
+    First, to show $\{a_k\}\in \ell^2(\bbz)$, we have
+    \begin{align*}
+        \sum_{k=-\infty}^{\infty}|a_k|^2 &=\sum_{k=1}^{\infty}\frac{1}{k^2} \\
+        &<\infty \\
+    \end{align*}
+    so $\{a_k\}\in \ell^2(\bbz)$. Now suppose for contradiction that $\exists f\in\calr$. Then the Abel means of $f$ is defined to be
+    \begin{equation*}
+        A_r(f)(\theta)=(f*P_r)(\theta)
+    \end{equation*}
+    where 
+    \begin{equation*}
+        P_r(\theta) = \sum_{n=-\infty}^{\infty}r^{|n|}e^{in\theta}
+    \end{equation*}
+    for $0\le r<1$. Furthermore,  
+    \begin{equation}
+        \sup|(f*P_r)(\theta)|\le\sup|f(\theta)|
+    \end{equation}
+    implying $A_r(f)(\theta)$ is bounded. However, $A_r(f)(\theta)$ can also be written as
+    \begin{align*}
+        A_r(f)(\theta) &= \sum_{n=-\infty}^{\infty}r^{|n|}a_ne^{in\theta} \\
+        &= \sum_{n=1}^{\infty}\frac{r^n}{n}e^{in\theta}
+    \end{align*}
+    Specifically, let $\theta = 0$. Then
+    \begin{align*}
+        \lim_{r\to1^-}A_r(f)(0) &= \lim_{r\to1^-}\sum_{n=1}^{\infty}\frac{r^n}{n} \\
+        &= \lim_{r\to1^-}-\log(1-r) \\
+        &= \infty \\
+    \end{align*}
+    which is a contradiction to ($1$).
+\end{proof}
+\newpage
+\setcounter{equation}{0}
+\subsection*{Exercise 7}
+Show that the trigonometric series
+\begin{equation*}
+    \sum_{n\ge2}\frac{1}{\log(n)}\sin(nx)
+\end{equation*}
+converges for every $x$, yet it is not the Fourier series of a Riemann integrable function.
+
+\vspace{2em}
+\begin{proof}
+    Suppose $M,N\in\bbn$ with $M\ge N$, and let
+    \begin{equation*}
+        S_N = \sum_{n=2}^{N}\frac{1}{\log(n)}\sin(nx)
+    \end{equation*}
+    and
+    \begin{equation*}
+        B_N = \sum_{n=2}^{N}\sin(nx) \le B
+    \end{equation*}
+    where $B$ is the bound for $B_N$. Then, using summation by parts,
+    \begin{align*}
+        |S_M-S_N| &= \Big|\frac{1}{\log(N)}B_N - \frac{1}{\log(M)}B_{M-1}-\sum_{n=M}^{N-1}\Big(\frac{1}{\log(n+1)}-\frac{1}{\log(n)}\Big)B_n\Big| \\
+        &\le B\Big(\Big|\frac{1}{\log(N)} + \frac{1}{\log(M)}\Big| + \Big|\sum_{n=M}^{N-1}\frac{\log\Big(\frac{n}{n+1}\Big)}{\log(n)\log(n+1)}\Big|\Big)
+    \end{align*}
+    Furthermore,
+    \begin{equation}
+        \frac{\log\Big(\frac{n}{n+1}\Big)}{\log(n)\log(n+1)} \le \frac{1}{n\log(n)^2}
+    \end{equation}
+    implying the sum
+    \begin{equation*}
+        \sum_{n=M}^{N-1}\frac{\log\Big(\frac{n}{n+1}\Big)}{\log(n)\log(n+1)}
+    \end{equation*}
+    converges by the integral test with results from ($1$). Alternatively, Dirichlet's test could be used to conclude
+    \begin{equation*}
+        \sum_{n\ge2}\frac{1}{\log(n)}\sin(nx)
+    \end{equation*}
+    converges.\newpage
+    Now suppose for contradiction $\exists f\in\calr$ with such a Fourier series. Then 
+    \begin{align*}
+        \sum_{n\ge2}\frac{1}{\log(n)}\sin(nx) &= \sum_{n\ge2}\frac{1}{\log(n)}\Big(\frac{e^{inx}-e^{-inx}}{2i}\Big) \\
+        &= \sum_{n\ge2}\frac{1}{2i\log(n)}e^{inx}-\sum_{n\le-2}\frac{1}{2i\log(-n)}e^{inx} \\
+        &= \sum_{n=-\infty}^{\infty}c_ne^{inx}
+    \end{align*}
+    where
+    \begin{equation*}
+        c_n=\begin{cases}
+            \frac{1}{2i\log(n)}, &n\ge2 \\
+            0, &|n|\le1 \\
+            -\frac{1}{2i\log(-n)}, &n\le-2
+        \end{cases}
+    \end{equation*}
+    are the Fourier coefficients of $f$. Furthermore, 
+    \begin{equation*}
+        \sum_{n=-\infty}^{\infty}|c_n|^2 = \frac{1}{4}\sum_{n=2}^{\infty}\frac{1}{|i\log(n)|^2} 
+    \end{equation*}
+    Note that the series above diverges, implying $\{c_n\}\notin \ell^2(\bbz)$, which is a contradiction to the assumption $f\in\calr$.
+\end{proof}
+
+\newpage
+\setcounter{equation}{0}
+\subsection*{Exercise 8a}
+Let $f$ be the function defined on $[-\pi, \pi]$ by $f(\theta)=|\theta|$. Use Parseval's identity to find the sums of the following two series:
+\begin{equation*}
+    \sum_{n=0}^{\infty}\frac{1}{(2n+1)^4}\hspace{1em}\text{and}\hspace{1em}\sum_{n=1}^{\infty}\frac{1}{n^4}
+\end{equation*}
+In fact, they are $\frac{\pi^4}{96}$ and $\frac{\pi^4}{90}$, respectively. ($*$)
+
+\vspace{2em}
+\begin{proof}
+    From Exercise 6 in Chapter 2, the Fourier coefficients of $f$ are
+    \begin{equation*}
+        a_n=\hat{f}(n)=\begin{cases}
+            \frac{\pi}{2}, &n=0 \\
+            \frac{-1+(-1)^n}{n^2\pi}, &n\ne0\\
+        \end{cases}
+    \end{equation*}
+    Then,
+    \begin{align*}
+        \sum_{n=-\infty}^{\infty}|a_n|^2 &= \frac{\pi^2}{4} + \sum_{n\ne0}\Big|\frac{-1+(-1)^n}{n^2\pi}\Big|^2 \\
+        &= \frac{\pi^2}{4} + \frac{8}{\pi^2}\sum_{n\text{ odd }\ge 1}\frac{1}{n^4} \\
+        &= \frac{\pi^2}{4} + \frac{8}{\pi^2}\sum_{n=0}^{\infty}\frac{1}{(2n+1)^4} \\
+    \end{align*}
+    and
+    \begin{align*}
+        \norm{f}^2 &= \frac{1}{2\pi}\int_{-\pi}^{\pi}|f(\theta)|^2d\theta \\
+        &= \frac{1}{\pi}\int_{0}^{\pi}\theta^2d\theta \\
+        &= \Eval{\frac{\theta^3}{3\pi}}{0}{\pi} \\
+        &= \frac{\pi^2}{3}
+    \end{align*}
+    By Parseval's identity, 
+    \begin{equation}
+        \sum_{n=-\infty}^{\infty}|a_n|^2=\norm{f}^2 \iff \frac{\pi^2}{4} + \frac{8}{\pi^2}\sum_{n=0}^{\infty}\frac{1}{(2n+1)^4} = \frac{\pi^2}{3}
+    \end{equation}
+    it is clear from ($1$) that
+    \begin{equation*}
+        \sum_{n=0}^{\infty}\frac{1}{(2n+1)^4} = \frac{\pi^4}{96}
+    \end{equation*}
+    Furthermore,
+    \begin{align*}
+        \sum_{n=1}^{\infty}\frac{1}{n^4} &= \sum_{n\text{ odd }\ge1}\frac{1}{n^4} + \sum_{n\text{ even }\ge2}\frac{1}{n^4} \\
+        &= \sum_{n=0}^{\infty}\frac{1}{(2n+1)^4} + \sum_{n\text{ even }\ge2}\frac{1}{n^4} \\
+        &= \frac{\pi^4}{96} + \frac{1}{16}\sum_{n=1}^{\infty}\frac{1}{n^4}
+    \end{align*}
+    resulting in the following equality,
+    \begin{equation}
+        \sum_{n=1}^{\infty}\frac{1}{n^4} = \frac{\pi^4}{96} + \frac{1}{16}\sum_{n=1}^{\infty}\frac{1}{n^4}
+    \end{equation}
+    and it is clear from ($2$) that 
+    \begin{equation*}
+        \sum_{n=1}^{\infty}\frac{1}{n^4} = \frac{\pi^4}{90}
+    \end{equation*}
+    where both results matches with ($*$).
+\end{proof}
+\newpage
+
+\subsection*{Exercise 9}
+Show that for $\alpha$ not an integer, the Fourier series of
+\begin{equation*}
+    \frac{\pi}{\sin(\pi\alpha)}e^{i(\pi-x)\alpha}
+\end{equation*}
+on $[0,2\pi]$ is given by
+\begin{equation*}
+    \sum_{n=-\infty}^{\infty}\frac{e^{inx}}{n+\alpha}
+\end{equation*}
+Apply Parseval's formula to show that
+\begin{equation*}
+    \sum_{n=-\infty}^{\infty}\frac{1}{(n+\alpha)^2}=\frac{\pi^2}{\sin(n\alpha)^2}
+\end{equation*}
+\vspace{2em}
+\begin{proof}
+    Let $n\in\bbz$. Then
+    \begin{enumerate}[(i)]
+        \item $n\ne0$:
+        \begin{align*}
+            a_n&=\hat{f}(n) \\
+            &=\frac{1}{2\pi}\int_{0}^{2\pi}f(x)e^{-inx}dx\\
+            &=\frac{1}{2\pi}\int_{0}^{2\pi}\frac{\pi}{\sin(\pi\alpha)}e^{i(\pi-x)\alpha-inx}dx\\
+            &=\frac{e^{i\pi\alpha}}{2\sin(\pi\alpha)}\int_{0}^{2\pi}e^{-i(n+\alpha)x}dx\\
+            &=\frac{-e^{i\pi\alpha}}{2\sin(\pi\alpha)}\cdot\Eval{\frac{e^{-i(n+\alpha)x}}{i(n+\alpha)}}{x=0}{x=2\pi}\\
+            &=\frac{-e^{i\pi\alpha}(1-e^{-2\pi i(n+\alpha)})}{2i\sin(\pi\alpha)(n+\alpha)} \\
+            &=\frac{1}{n+\alpha}
+        \end{align*}
+        \item $n\ne0$:
+        \begin{align*}
+            a_0&=\hat{f}(n) \\
+            &=\frac{1}{2\pi}\int_{0}^{2\pi}f(x)dx\\
+            &=\frac{1}{2\pi}\int_{0}^{2\pi}\frac{\pi}{\sin(\pi\alpha)}e^{i\pi\alpha}\cdot e^{-i\alpha x}dx\\
+            &=\frac{-e^{i\pi\alpha}}{2i\alpha\sin(\pi\alpha)}\cdot\Eval{e^{-i\alpha x}}{x=0}{x=2\pi}\\
+            &=\frac{-e^{i\pi\alpha}(e^{-2\pi\alpha i}-1)}{2i\sin(\pi\alpha)}\cdot\frac{1}{\alpha}\\
+            &=\frac{1}{\alpha}
+        \end{align*}
+    \end{enumerate}
+    By (i) and (ii). The Fourier series is given by
+    \begin{equation*}
+        \sum_{n=-\infty}^{\infty}a_ne^{inx}=\sum_{n=-\infty}^{\infty}\frac{e^{inx}}{n+\alpha}
+    \end{equation*}
+    Furthermore, by Parseval's identity, we have
+    \begin{equation*}
+        \sum_{n=-\infty}^{\infty}|a_n|^2=\norm{f}^2
+    \end{equation*}
+    where
+    \begin{equation*}
+        \norm{f}^2=\frac{1}{2\pi}\int_{0}^{2\pi}|f(x)|^2dx
+    \end{equation*}
+    So, we have
+    \begin{align*}
+        \sum_{n=-\infty}^{\infty}\frac{1}{(n+\alpha)^2}&=\norm{f}^2\\
+        &=\frac{1}{2\pi}\int_{0}^{2\pi}|f(x)|^2dx\\
+        &=\frac{1}{2\pi}\int_{0}^{2\pi}\Big(\frac{\pi}{|\sin(n\alpha)|}|e^{i(\pi-x)\alpha}|\Big)^2dx\\
+        &=\frac{\pi}{2\sin(n\alpha)^2}\Eval{x}{x=0}{x=2\pi}\\
+        &=\frac{\pi^2}{2\sin(n\alpha)^2}
+    \end{align*}
+\end{proof}
+\newpage
+
+\subsection*{Exercise 12}
+Prove that $\displaystyle\int_{0}^{\infty}\frac{\sin(x)}{x}dx=\frac{\pi}{2}$.
+
+\vspace{2em}
+\begin{proof}
+    To start, let $D_N(x)$ be the $N^{th}$ Dirichlet kernel.
+    Then
+    \begin{align*}
+        \int_{-\pi}^{\pi}D_N(x)dx&=\int_{-\pi}^{\pi}\sum_{\substack{|n|\le N\\n\ne0}}e^{inx}+\int_{-\pi}^{\pi}dx\\
+        &=\sum_{\substack{|n|\le N\\n\ne0}}\int_{-\pi}^{\pi}e^{inx}+\Eval{x}{x=-\pi}{\pi}\\
+        &=\sum_{\substack{|n|\le N\\n\ne0}}\frac{1}{in}\Eval{e^{inx}}{x=-\pi}{\pi}+2\pi\\
+        &=2\pi
+    \end{align*}
+    Furthermore, let $f:[-\pi,\pi]\to\bbr$ be defined as 
+    \begin{equation*}
+        f(x)=\begin{cases}
+            \frac{1}{\sin(x/2)}-\frac{2}{x},&\hspace{1em}x\ne0\\
+            0, &\hspace{1em}x=0
+        \end{cases}
+    \end{equation*}
+    A simple use of L'Hopital rule will show that the function is continous on $[-\pi,\pi]$, and Riemann Lebesque Lemma tells us that
+    \begin{equation*}
+        \int_{-\pi}^{\pi}\sin([N+1/2]x)\Big(\frac{1}{\sin(x/2)}-\frac{2}{x}\Big)\to0,\hspace{1em}\text{ as }N\to\infty
+    \end{equation*}
+    and
+    \begin{align*}
+        2\pi&=\lim_{n\to\infty}\int_{-\pi}^{\pi}\frac{2\sin([N+1/2]x)}{x}dx\\
+        &=2\lim_{n\to\infty}\int_{-(N+1/2)\pi}^{(N+1/2)\pi}\frac{sin(u)}{u}du\\
+        &=4\int_{0}^{\infty}\frac{sin(u)}{u}du
+    \end{align*}
+    So we have $\displaystyle\int_{0}^{\infty}\frac{\sin(x)}{x}dx=\frac{\pi}{2}$.
+\end{proof}
+\newpage
+
+\subsection*{Exercise 15}
+Let $f$ be $2\pi$-periodic and Riemann integrable on $[-\pi,\pi]$.
+\begin{enumerate}[(a)]
+    \item Show that
+    \begin{equation*}
+        \hat{f}(n)=-\frac{1}{2\pi}\int_{-\pi}^{\pi}f(x+\pi/n)e^{-inx}dx
+    \end{equation*}
+    hence
+    \begin{equation*}
+        \hat{f}(n)=\frac{1}{4\pi}\int_{-\pi}^{\pi}[f(x) - f(x + \pi/n)]e^{-inx}dx
+    \end{equation*}
+    \item Now assume that $f$ satisfies a Hölder condition of order $\alpha$, namely
+    \begin{equation*}
+        |f(x+h)-f(x)|\le C|h|^\alpha
+    \end{equation*}
+    for some $0<\alpha\le1$, some $C>0$, and all $x,h$ Use part a) to show that
+    \begin{equation*}
+        \hat{f}(n)=O(1/|n|^\alpha)
+    \end{equation*}
+    \item Prove that the above result cannot be improved by showing that the function
+    \begin{equation*}
+        f(x)=\sum_{k=0}^{\infty}2^{-k\alpha}e^{i2^kx},
+    \end{equation*}
+    where $0<\alpha<1$, satisfies
+    \begin{equation*}
+        |f(x+h)-f(x)|\le C|h|^\alpha
+    \end{equation*}
+    and $\hat{f}(N)=1/N^\alpha$ whenever $N=2^k$.
+\end{enumerate}
+
+\vspace{2em}
+\begin{proof}
+    By Chapter 2 Exercise 1, we have that 
+    \begin{align*}
+        \hat{f}(n)&=\frac{1}{2\pi}\int_{-\pi}^{\pi}f(\theta)e^{-in\theta}d\theta\\
+        &=\frac{1}{2\pi}\int_{-\pi-\frac{\pi}{n}}^{\pi-\frac{\pi}{n}}f(\theta)e^{-in\theta}d\theta\\
+        &=\frac{1}{2\pi}\int_{-\pi}^{\pi}f(x+\pi/n)e^{-in(x+\frac{\pi}{n})}dx\\
+        &=-\frac{1}{2\pi}\int_{-\pi}^{\pi}f(x+\pi/n)e^{-in}dx
+    \end{align*}
+    \newpage
+    So $\hat{f}(n)$ can be written as the following sum
+    \begin{align*}
+        \hat{f}(n)&=\frac{1}{2}\hat{f}(n)+\frac{1}{2}\hat{f}(n)\\
+        &=\frac{1}{4\pi}\int_{-\pi}^{\pi}f(x)e^{-inx}dx-\frac{1}{4\pi}\int_{-\pi}^{\pi}f(x+\pi/n)e^{-in}dx\\
+        &=\frac{1}{4\pi}\int_{-\pi}^{\pi}[f(x) - f(x + \pi/n)]e^{-inx}dx
+    \end{align*}
+    Now we assume that $f$ satisfies a Hölder condition of order $\alpha$ as in part b). Then
+    \begin{align*}
+        |\hat{f}(n)|&=\Big|\frac{1}{4\pi}\int_{-\pi}^{\pi}[f(x) - f(x + \pi/n)]e^{-inx}dx\Big|\\
+        &\le\frac{1}{4\pi}\int_{-\pi}^{\pi}|f(x) - f(x + \pi/n)|dx \\
+        &\le\frac{1}{4\pi}\cdot C\Big|\frac{\pi}{n}\Big|^\alpha\Eval{x}{x=-\pi}{x=\pi}\\
+        &=\frac{C\pi^\alpha}{2}\cdot\frac{1}{|n|^\alpha}
+    \end{align*}
+    So $\hat{f}(n)=O(1/|n|^\alpha)$. Lastly, let $z$ be the largest integer such that
+    \begin{equation*}
+        2^z|h|\le1
+    \end{equation*}
+    Then
+    \begin{align*}
+        |f(x+h)-f(x)|&=\Big|\sum_{k=0}^{\infty}2^{-k\alpha}(e^{i2^k(x+h)}-e^{i2^kx})\Big|\\
+        &\le\sum_{k=0}^{z}|2^{-k\alpha}(e^{i2^k(x+h)}-e^{i2^kx})|+\sum_{k=z+1}^{\infty}|2^{-k\alpha}(e^{i2^k(x+h)}-e^{i2^kx})| \\
+        &\le|h|\sum_{k=0}^{z}2^{(1-\alpha)k}+2\sum_{k=z+1}^{\infty}2^{-k\alpha}\\
+        &\le|h|\frac{1-2^{(1-\alpha)(z+1)}}{1-2^{(1-\alpha)}}+2\frac{2^{-(z+2)\alpha}}{1-2^{-\alpha}}\\
+        &=\underbrace{\Big(\frac{1}{2^{(1-\alpha)}-1}+\frac{2}{1-2^{-\alpha}}\Big)}_{C}|h|^\alpha
+    \end{align*}
+    So $f$ satisfies $|f(x+h)-f(x)|\le C|h|^\alpha$, where $0<\alpha<1$, and
+    \begin{align*}
+        \hat{f}(N)&=\frac{1}{2\pi}\int_{-\pi}^{\pi}f(x)e^{-iNx}dx\\
+        &=\frac{1}{2\pi}\int_{-\pi}^{\pi}\sum_{k=0}^{\infty}2^{-k\alpha}e^{i2^kx}\cdot e^{-iNx}\\
+        &=\frac{1}{2\pi}\sum_{k=0}^{\infty}2^{-k\alpha}\underbrace{\int_{-\pi}^{\pi}e^{i(2^k-N)x}dx}_{I_N}
+    \end{align*}
+    where 
+    \begin{equation*}
+        I_N=\int_{-\pi}^{\pi}e^{i(2^k-N)x}dx=\begin{cases}
+            2\pi,&\hspace{1em}2^k=N\\
+            0,&\hspace{1em}2^k\ne N
+        \end{cases}
+    \end{equation*}
+    which concludes the final part where $\hat{f}(N)=1/N^\alpha$ whenever $N=2^k$.
+\end{proof}
+\end{document}
